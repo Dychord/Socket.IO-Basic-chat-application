@@ -58,7 +58,6 @@
             }
         })
 
-
         socket.on('chat-msg',({message, sender})=>{
            const div = document.querySelector('#messagesDiv')
            const p = document.createElement('p')
@@ -67,10 +66,7 @@
            div.append(p)
         })
 
-
         //dynamo DB
-
-        
 
     </script>
 </body>
