@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Socket.IO Test</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/4.7.5/socket.io.js"></script>
+</head>
+<body>
+    <div class="w-full h-screen flex flex-col">
+
+        <!-- Total users -->
+        <div class="bg-zinc-900 w-full flex items-start justify-between pl-10 pr-10 py-8">
+            <p id="totalUsers" class="text-white text-2xl font-bold"></p>
+        </div>
+        
+
+        <!-- Messages -->
+        <div id="messagesDiv" class="w-full h-[80%] bg-zinc-900/95 overflow-y-scroll">
+        </div>
+
+
+        <!-- input field  -->
+        <div class="flex justify-center items-center h-[20%] bg-zinc-900">
+            <input id="inputMessage" type="text" placeholder="message" name="message" class="outline-none w-[30%] px-2 py-1 rounded-md">
+            <button id="sendButton" class="bg-zinc-200 ml-5 px-2 py-1 rounded-md">Send</button>
+        </div>
+
+    </div>
+    <script>
+        const socket = io()
+
+        socket.on('totalUsers', (data)=>{
+            document.getElementById('totalUsers').textContent = data
+        })
+
+        const sendButton = document.querySelector("#sendButton")
+        const inputField = document.querySelector("#inputMessage"); 
+
+
+        function sendMsg(){
+            let inputMessage = inputField.value; 
+            if (inputMessage.trim() !== '') { 
+                socket.emit('chat-msg', inputMessage); 
+                inputField.value = ''; 
+            }
+        }
+        sendButton.addEventListener('click', sendMsg)
+        inputField.addEventListener('keydown', (event)=>{
+            if(event.key === 'Enter' || (event.ctrlKey && event.key === 'Enter')){
+                sendMsg()
+            }
+        })
+
+
+        socket.on('chat-msg',({message, sender})=>{
+           const div = document.querySelector('#messagesDiv')
+           const p = document.createElement('p')
+           p.classList.add('text-white', 'w-fit', 'bg-zinc-700', 'text-md', 'px-4', 'py-1', 'rounded-lg', 'ml-8', 'mt-3')
+           p.textContent = (`${sender}: ${message}`)
+           div.append(p)
+        })
+
+
+        //dynamo DB
+
+        
+
+    </script>
+</body>
+</html>

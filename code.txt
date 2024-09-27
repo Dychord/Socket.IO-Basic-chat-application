@@ -1,0 +1,31 @@
+------------------Different Room logic----------------------
+
+let roomNo = 1;
+let full = 0;
+
+io.on('connection', (socket)=>{
+    console.log('A user connected')
+
+    socket.join('room ' + roomNo)
+    io.in('room ' + roomNo).emit('connectedRoom', 'Connected to room no ' + roomNo)
+
+    full++;
+    if(full>=2){
+        full=0;
+        roomNo++;
+    }
+
+    socket.on('disconnect', ()=>{
+        console.log('A user disconnected');
+    })
+})
+
+
+
+
+
+
+
+
+
+
