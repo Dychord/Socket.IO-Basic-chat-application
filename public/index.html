@@ -31,6 +31,11 @@
     <script>
         const socket = io()
 
+        // Prompt for username
+        const username = prompt("Enter your username");
+
+        socket.emit('register', username); // Emit the username to the server
+
         socket.on('totalUsers', (data)=>{
             document.getElementById('totalUsers').textContent = data
         })

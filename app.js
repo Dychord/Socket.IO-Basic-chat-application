@@ -9,6 +9,7 @@ const io = socketIO(server)
 app.use(express.static('public'))
 
 let totalUsers = 0;
+const users = {}
 
 io.on('connection', (socket)=>{
     totalUsers++
@@ -16,9 +17,13 @@ io.on('connection', (socket)=>{
     io.emit('totalUsers', 'Total users - '+ totalUsers)
 
 
+    socket.on('register', (username) => {
+        users[socket.id] = username; // Store the username with the socket ID
+    });
+
 
     socket.on('chat-msg', (msg)=>{
-        io.emit('chat-msg', {message: msg, sender: socket.id})
+        io.emit('chat-msg', {message: msg, sender: users[socket.id] || 'Anonymous' })
     })
     
 
